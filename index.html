@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>俺の初サイト - 究極完全版(改)</title>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #0d1117, #161b22, #004d40, #1a237e);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            color: #58a6ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            overflow: hidden;
+            /* cursor: none; は削除しました（普通のカーソルに戻ります） */
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 降り注ぐ星のスタイル */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear infinite;
+            z-index: 1;
+        }
+        @keyframes fall {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(110vh); }
+        }
+
+        h1 {
+            color: #238636;
+            font-size: 60px;
+            text-shadow: 0 0 15px #238636;
+            z-index: 10;
+        }
+
+        .character-img {
+            width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px #58a6ff;
+            border: 2px solid #58a6ff;
+            animation: float 3s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        #typing-text {
+            font-size: 24px;
+            min-height: 1.2em;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 10;
+        }
+
+        button {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer; /* 普通のクリックカーソルに戻しました */
+            font-size: 20px;
+            margin-top: 20px;
+            z-index: 10;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #238636;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ウオW</h1>
+
+    <img src="hotaru123.png" alt="キャラ" class="character-img">
+
+    <p id="typing-text"></p>
+
+    <div class="controls">
+        <audio id="bgm" src="music.mp3" loop></audio>
+        <button onclick="toggleMusic()">🎵 BGM再生 / 停止</button>
+    </div>
+
+    <script>
+        // --- 1. タイピング演出 ---
+        const textElement = document.getElementById('typing-text');
+        const message = "めりーおぶじえんど... 妹をかわいがる(意味深)";
+        let charIndex = 0;
+        function type() {
+            if (charIndex < message.length) {
+                textElement.textContent += message.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 150);
+            }
+        }
+        window.onload = type;
+
+        // --- 2. 星を降らせる ---
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 4 + 1 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 2 + 's';
+            star.style.animationDuration = duration;
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
+            setTimeout(() => { star.remove(); }, 5000);
+        }
+        setInterval(createStar, 100);
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgm');
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    </script>
+</body>
+</html>
