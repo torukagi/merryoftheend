@@ -5,23 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>merryoftheend</title>
     <style>
-        /* 左上のステータス表示 */
+        /* 左上のステータス表示（文字を白く光らせるように修正） */
         #status-container {
             position: fixed;
             top: 10px;
             left: 10px;
-            font-size: 13px;
-            color: #00ff00;
+            font-size: 14px;
+            color: #ffffff !important; /* 絶対に白！ */
             font-family: 'Courier New', Courier, monospace;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 12px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8); /* 背景を少し濃くして見やすく */
+            padding: 10px 15px;
             border-radius: 5px;
-            border-left: 3px solid #238636;
+            border-left: 4px solid #238636;
             text-align: left;
-            pointer-events: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
-        .status-label { font-size: 10px; color: #58a6ff; display: block; margin-bottom: 2px; }
+        .status-label { 
+            font-size: 10px; 
+            color: #58a6ff !important; /* ラベルは明るい青 */
+            display: block; 
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+        #date-display, #time-display {
+            color: #00ff00 !important; /* 数字は明るい緑に！ */
+            text-shadow: 0 0 5px #00ff00;
+        }
 
         body {
             background: linear-gradient(-45deg, #0d1117, #161b22, #004d40, #1a237e);
@@ -109,9 +119,9 @@
 
     <div id="status-container">
         <span class="status-label">SYSTEM DATE</span>
-        <div id="date-display"></div>
+        <div id="date-display">LOADING...</div>
         <span class="status-label" style="margin-top: 5px;">CURRENT TIME</span>
-        <div id="time-display"></div>
+        <div id="time-display">00:00:00</div>
     </div>
 
     <h1>ウオW</h1>
@@ -130,20 +140,63 @@
     </div>
 
     <script>
+        // 時計更新（確実に動作するように改善）
         function updateClock() {
+            const dateEl = document.getElementById('date-display');
+            const timeEl = document.getElementById('time-display');
+            if (!dateEl || !timeEl) return;
+
             const now = new Date();
             const y = now.getFullYear();
             const m = String(now.getMonth() + 1).padStart(2, '0');
             const d = String(now.getDate()).padStart(2, '0');
-            document.getElementById('date-display').textContent = `${y}/${m}/${d}`;
+            dateEl.textContent = `${y}/${m}/${d}`;
+            
             const hrs = String(now.getHours()).padStart(2, '0');
             const min = String(now.getMinutes()).padStart(2, '0');
             const sec = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('time-display').textContent = `${hrs}:${min}:${sec}`;
+            timeEl.textContent = `${hrs}:${min}:${sec}`;
         }
-        setInterval(updateClock, 1000);
-        updateClock();
 
+        // タイピング演出
         const textElement = document.getElementById('typing-text');
         const message = "めりーおぶじえんど... 妹をかわいがる（意味深）";
         let charIndex = 0;
+        function type() {
+            if (charIndex < message.length) {
+                textElement.textContent += message.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 150);
+            }
+        }
+
+        // 全てを起動
+        window.onload = function() {
+            type();
+            updateClock();
+            setInterval(updateClock, 1000);
+        };
+
+        // 星
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 2 + 's';
+            star.style.animationDuration = duration;
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
+            setTimeout(() => { star.remove(); }, 5000);
+        }
+        setInterval(createStar, 100);
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgm');
+            if (audio.paused) { audio.play(); } else { audio.pause(); }
+        }
+    </script>
+</body>
+</html>
