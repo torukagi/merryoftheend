@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>merryoftheend</title>
     <style>
+        /* 左上のステータス表示（日付＋時間） */
+        #status-container {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 13px;
+            color: #00ff00; /* ターミナル風の緑 */
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 12px;
+            border-radius: 5px;
+            border-left: 3px solid #238636;
+            text-align: left;
+            pointer-events: none;
+        }
+        .status-label {
+            font-size: 10px;
+            color: #58a6ff;
+            display: block;
+            margin-bottom: 2px;
+        }
+
         body {
             background: linear-gradient(-45deg, #0d1117, #161b22, #004d40, #1a237e);
             background-size: 400% 400%;
@@ -16,7 +39,7 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px; /* スマホ用の余白 */
+            padding: 20px;
             font-family: sans-serif;
             overflow: hidden;
             text-align: center;
@@ -44,15 +67,14 @@
 
         h1 {
             color: #238636;
-            font-size: clamp(40px, 10vw, 60px); /* 画面サイズに合わせて文字サイズ変化 */
+            font-size: clamp(40px, 10vw, 60px);
             text-shadow: 0 0 15px #238636;
             z-index: 10;
-            margin-bottom: 20px;
         }
 
         .character-img {
             width: 100%;
-            max-width: 400px; /* PCではこのサイズ、スマホでは幅いっぱい */
+            max-width: 400px;
             height: auto;
             border-radius: 20px;
             box-shadow: 0 0 30px #58a6ff;
@@ -69,80 +91,3 @@
         #typing-text {
             font-size: clamp(18px, 5vw, 24px);
             min-height: 1.2em;
-            color: #00ff00;
-            text-shadow: 0 0 5px #00ff00;
-            font-family: 'Courier New', Courier, monospace;
-            z-index: 10;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            padding: 12px 24px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-top: 20px;
-            z-index: 10;
-            transition: 0.3s;
-        }
-        button:hover {
-            background-color: #238636;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>ウオW</h1>
-
-    <img src="hotaru123.png" alt="キャラ" class="character-img">
-
-    <p id="typing-text"></p>
-
-    <div class="controls">
-        <audio id="bgm" src="music.mp3" loop></audio>
-        <button onclick="toggleMusic()">🎵 BGM再生 / 停止</button>
-    </div>
-
-    <script>
-        const textElement = document.getElementById('typing-text');
-        const message = "めりーおぶじえんど... 妹をかわいがる（意味深）";
-        let charIndex = 0;
-        function type() {
-            if (charIndex < message.length) {
-                textElement.textContent += message.charAt(charIndex);
-                charIndex++;
-                setTimeout(type, 150);
-            }
-        }
-        window.onload = type;
-
-        function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 3 + 1 + 'px';
-            star.style.width = size;
-            star.style.height = size;
-            star.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 3 + 2 + 's';
-            star.style.animationDuration = duration;
-            star.style.opacity = Math.random();
-            document.body.appendChild(star);
-            setTimeout(() => { star.remove(); }, 5000);
-        }
-        setInterval(createStar, 100);
-
-        function toggleMusic() {
-            const audio = document.getElementById('bgm');
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
-        }
-    </script>
-</body>
-</html>
