@@ -2,7 +2,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>俺の初サイト - 究極完全版(改)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>merryoftheend</title>
     <style>
         body {
             background: linear-gradient(-45deg, #0d1117, #161b22, #004d40, #1a237e);
@@ -15,9 +16,10 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px; /* スマホ用の余白 */
             font-family: sans-serif;
             overflow: hidden;
-            /* cursor: none; は削除しました（普通のカーソルに戻ります） */
+            text-align: center;
         }
 
         @keyframes gradientMove {
@@ -26,7 +28,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 降り注ぐ星のスタイル */
         .star {
             position: absolute;
             background: white;
@@ -43,13 +44,16 @@
 
         h1 {
             color: #238636;
-            font-size: 60px;
+            font-size: clamp(40px, 10vw, 60px); /* 画面サイズに合わせて文字サイズ変化 */
             text-shadow: 0 0 15px #238636;
             z-index: 10;
+            margin-bottom: 20px;
         }
 
         .character-img {
-            width: 300px;
+            width: 100%;
+            max-width: 400px; /* PCではこのサイズ、スマホでは幅いっぱい */
+            height: auto;
             border-radius: 20px;
             box-shadow: 0 0 30px #58a6ff;
             border: 2px solid #58a6ff;
@@ -59,26 +63,27 @@
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-15px); }
         }
 
         #typing-text {
-            font-size: 24px;
+            font-size: clamp(18px, 5vw, 24px);
             min-height: 1.2em;
             color: #00ff00;
             text-shadow: 0 0 5px #00ff00;
             font-family: 'Courier New', Courier, monospace;
             z-index: 10;
+            margin-top: 20px;
         }
 
         button {
             background-color: #21262d;
             color: #c9d1d9;
             border: 1px solid #30363d;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border-radius: 50px;
-            cursor: pointer; /* 普通のクリックカーソルに戻しました */
-            font-size: 20px;
+            cursor: pointer;
+            font-size: 18px;
             margin-top: 20px;
             z-index: 10;
             transition: 0.3s;
@@ -103,9 +108,8 @@
     </div>
 
     <script>
-        // --- 1. タイピング演出 ---
         const textElement = document.getElementById('typing-text');
-        const message = "めりーおぶじえんど... 妹をかわいがる(意味深)";
+        const message = "めりーおぶじえんど... 妹をかわいがる（意味深）";
         let charIndex = 0;
         function type() {
             if (charIndex < message.length) {
@@ -116,11 +120,10 @@
         }
         window.onload = type;
 
-        // --- 2. 星を降らせる ---
         function createStar() {
             const star = document.createElement('div');
             star.className = 'star';
-            const size = Math.random() * 4 + 1 + 'px';
+            const size = Math.random() * 3 + 1 + 'px';
             star.style.width = size;
             star.style.height = size;
             star.style.left = Math.random() * 100 + 'vw';
