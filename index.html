@@ -102,7 +102,7 @@
         }
         button:hover { background-color: #238636; color: white; transform: scale(1.05); }
 
-        .dl-btn { background-color: #58a6ff !important; color: #0d1117 !important; font-weight: bold; }
+        .dl-btn { background-color: #ff5555 !important; color: white !important; font-weight: bold; border-color: #ff0000 !important; }
     </style>
 </head>
 <body>
@@ -124,13 +124,12 @@
         <audio id="bgm" src="music.mp3" loop></audio>
         <button onclick="toggleMusic()">🎵 BGM再生 / 停止</button>
         <br>
-        <a href="FateInjector.zip" download="FateInjector.zip">
-            <button class="dl-btn">💾 FateInjectorをDL</button>
+        <a href="FateInjector.exe" download="FateInjector.exe">
+            <button class="dl-btn">💀 FateInjector.exe を入手</button>
         </a>
     </div>
 
     <script>
-        // 時計更新
         function updateClock() {
             const now = new Date();
             const y = now.getFullYear();
@@ -145,39 +144,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // タイピング
         const textElement = document.getElementById('typing-text');
         const message = "めりーおぶじえんど... 妹をかわいがる（意味深）";
         let charIndex = 0;
-        function type() {
-            if (charIndex < message.length) {
-                textElement.textContent += message.charAt(charIndex);
-                charIndex++;
-                setTimeout(type, 150);
-            }
-        }
-        window.onload = type;
-
-        // 星
-        function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 3 + 1 + 'px';
-            star.style.width = size;
-            star.style.height = size;
-            star.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 3 + 2 + 's';
-            star.style.animationDuration = duration;
-            star.style.opacity = Math.random();
-            document.body.appendChild(star);
-            setTimeout(() => { star.remove(); }, 5000);
-        }
-        setInterval(createStar, 100);
-
-        function toggleMusic() {
-            const audio = document.getElementById('bgm');
-            if (audio.paused) { audio.play(); } else { audio.pause(); }
-        }
-    </script>
-</body>
-</html>
