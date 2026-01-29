@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>merryoftheend</title>
     <style>
-        /* 左上のステータス表示（日付＋時間） */
+        /* 左上のステータス表示 */
         #status-container {
             position: fixed;
             top: 10px;
             left: 10px;
             font-size: 13px;
-            color: #00ff00; /* ターミナル風の緑 */
+            color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
             z-index: 100;
             background: rgba(0, 0, 0, 0.6);
@@ -21,12 +21,7 @@
             text-align: left;
             pointer-events: none;
         }
-        .status-label {
-            font-size: 10px;
-            color: #58a6ff;
-            display: block;
-            margin-bottom: 2px;
-        }
+        .status-label { font-size: 10px; color: #58a6ff; display: block; margin-bottom: 2px; }
 
         body {
             background: linear-gradient(-45deg, #0d1117, #161b22, #004d40, #1a237e);
@@ -65,12 +60,7 @@
             to { transform: translateY(110vh); }
         }
 
-        h1 {
-            color: #238636;
-            font-size: clamp(40px, 10vw, 60px);
-            text-shadow: 0 0 15px #238636;
-            z-index: 10;
-        }
+        h1 { color: #238636; font-size: clamp(40px, 10vw, 60px); text-shadow: 0 0 15px #238636; z-index: 10; margin: 10px 0; }
 
         .character-img {
             width: 100%;
@@ -91,3 +81,103 @@
         #typing-text {
             font-size: clamp(18px, 5vw, 24px);
             min-height: 1.2em;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 10;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 10px;
+            z-index: 10;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #238636; color: white; transform: scale(1.05); }
+
+        .dl-btn { background-color: #58a6ff !important; color: #0d1117 !important; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="status-container">
+        <span class="status-label">SYSTEM DATE</span>
+        <div id="date-display"></div>
+        <span class="status-label" style="margin-top: 5px;">CURRENT TIME</span>
+        <div id="time-display"></div>
+    </div>
+
+    <h1>ウオW</h1>
+
+    <img src="hotaru123.png" alt="キャラ" class="character-img">
+
+    <p id="typing-text"></p>
+
+    <div class="controls">
+        <audio id="bgm" src="music.mp3" loop></audio>
+        <button onclick="toggleMusic()">🎵 BGM再生 / 停止</button>
+        <br>
+        <a href="FateInjector.zip" download="FateInjector.zip">
+            <button class="dl-btn">💾 FateInjectorをDL</button>
+        </a>
+    </div>
+
+    <script>
+        // 時計更新
+        function updateClock() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            document.getElementById('date-display').textContent = `${y}/${m}/${d}`;
+            const hrs = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const sec = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('time-display').textContent = `${hrs}:${min}:${sec}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // タイピング
+        const textElement = document.getElementById('typing-text');
+        const message = "めりーおぶじえんど... 妹をかわいがる（意味深）";
+        let charIndex = 0;
+        function type() {
+            if (charIndex < message.length) {
+                textElement.textContent += message.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 150);
+            }
+        }
+        window.onload = type;
+
+        // 星
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 2 + 's';
+            star.style.animationDuration = duration;
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
+            setTimeout(() => { star.remove(); }, 5000);
+        }
+        setInterval(createStar, 100);
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgm');
+            if (audio.paused) { audio.play(); } else { audio.pause(); }
+        }
+    </script>
+</body>
+</html>
