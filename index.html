@@ -5,32 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>merryoftheend</title>
     <style>
-        /* 左上のステータス表示（文字を白く光らせるように修正） */
+        /* 左上のステータス表示（強制表示設定） */
         #status-container {
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 15px;
+            left: 15px;
             font-size: 14px;
-            color: #ffffff !important; /* 絶対に白！ */
             font-family: 'Courier New', Courier, monospace;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8); /* 背景を少し濃くして見やすく */
+            z-index: 9999; /* 最前面に */
+            background: rgba(0, 0, 0, 0.85);
             padding: 10px 15px;
             border-radius: 5px;
             border-left: 4px solid #238636;
             text-align: left;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
         }
         .status-label { 
             font-size: 10px; 
-            color: #58a6ff !important; /* ラベルは明るい青 */
+            color: #58a6ff !important; 
             display: block; 
             margin-bottom: 2px;
             font-weight: bold;
         }
         #date-display, #time-display {
-            color: #00ff00 !important; /* 数字は明るい緑に！ */
-            text-shadow: 0 0 5px #00ff00;
+            color: #00ff00 !important; /* 鮮やかな緑 */
+            text-shadow: 0 0 8px #00ff00;
+            display: block;
+            min-width: 100px;
         }
 
         body {
@@ -54,20 +56,6 @@
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            pointer-events: none;
-            animation: fall linear infinite;
-            z-index: 1;
-        }
-        @keyframes fall {
-            from { transform: translateY(-10vh); }
-            to { transform: translateY(110vh); }
         }
 
         h1 { color: #238636; font-size: clamp(40px, 10vw, 60px); text-shadow: 0 0 15px #238636; z-index: 10; margin: 10px 0; }
@@ -98,6 +86,9 @@
             margin-top: 20px;
         }
 
+        /* ボタンのデザイン */
+        .btn-container { margin-top: 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        
         button {
             background-color: #21262d;
             color: #c9d1d9;
@@ -105,22 +96,24 @@
             padding: 12px 24px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 18px;
-            margin-top: 10px;
-            z-index: 10;
+            font-size: 16px;
             transition: 0.3s;
         }
         button:hover { background-color: #238636; color: white; transform: scale(1.05); }
 
-        .dl-btn { background-color: #ff5555 !important; color: white !important; font-weight: bold; border-color: #ff0000 !important; }
+        .dl-btn { background-color: #ff5555 !important; color: white !important; font-weight: bold; border: none !important; }
+
+        /* 星の演出 */
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.8; pointer-events: none; animation: fall linear infinite; z-index: 1; }
+        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
     </style>
 </head>
 <body>
 
     <div id="status-container">
         <span class="status-label">SYSTEM DATE</span>
-        <div id="date-display">LOADING...</div>
-        <span class="status-label" style="margin-top: 5px;">CURRENT TIME</span>
+        <div id="date-display">----/--/--</div>
+        <span class="status-label" style="margin-top: 8px;">CURRENT TIME</span>
         <div id="time-display">00:00:00</div>
     </div>
 
@@ -130,32 +123,47 @@
 
     <p id="typing-text"></p>
 
-    <div class="controls">
-        <audio id="bgm" src="music.mp3" loop></audio>
-        <button onclick="toggleMusic()">🎵 BGM再生 / 停止</button>
-        <br>
-        <a href="FateInjector.exe" download="FateInjector.exe">
+    <div class="btn-container">
+        <button id="music-btn" onclick="toggleMusic()">🎵 BGMを再生する</button>
+        
+        <a href="FateInjector.exe" download="FateInjector.exe" style="text-decoration: none;">
             <button class="dl-btn">💀 FateInjector.exe を入手</button>
         </a>
     </div>
 
-    <script>
-        // 時計更新（確実に動作するように改善）
-        function updateClock() {
-            const dateEl = document.getElementById('date-display');
-            const timeEl = document.getElementById('time-display');
-            if (!dateEl || !timeEl) return;
+    <audio id="bgm" src="music.mp3" loop preload="auto"></audio>
 
+    <script>
+        // 時計と日付の更新
+        function updateClock() {
             const now = new Date();
             const y = now.getFullYear();
             const m = String(now.getMonth() + 1).padStart(2, '0');
             const d = String(now.getDate()).padStart(2, '0');
-            dateEl.textContent = `${y}/${m}/${d}`;
-            
             const hrs = String(now.getHours()).padStart(2, '0');
             const min = String(now.getMinutes()).padStart(2, '0');
             const sec = String(now.getSeconds()).padStart(2, '0');
-            timeEl.textContent = `${hrs}:${min}:${sec}`;
+            
+            document.getElementById('date-display').textContent = `${y}/${m}/${d}`;
+            document.getElementById('time-display').textContent = `${hrs}:${min}:${sec}`;
+        }
+
+        // 音楽の再生制御
+        const audio = document.getElementById('bgm');
+        const btn = document.getElementById('music-btn');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    btn.textContent = "⏸ BGMを停止する";
+                }).catch(e => {
+                    console.log("再生に失敗しました:", e);
+                    alert("音楽ファイルが見つからないか、ブラウザがブロックしました。");
+                });
+            } else {
+                audio.pause();
+                btn.textContent = "🎵 BGMを再生する";
+            }
         }
 
         // タイピング演出
@@ -170,14 +178,14 @@
             }
         }
 
-        // 全てを起動
+        // ページ読み込み時の処理
         window.onload = function() {
             type();
             updateClock();
             setInterval(updateClock, 1000);
         };
 
-        // 星
+        // 星を降らせる
         function createStar() {
             const star = document.createElement('div');
             star.className = 'star';
@@ -185,18 +193,11 @@
             star.style.width = size;
             star.style.height = size;
             star.style.left = Math.random() * 100 + 'vw';
-            const duration = Math.random() * 3 + 2 + 's';
-            star.style.animationDuration = duration;
-            star.style.opacity = Math.random();
+            star.style.animationDuration = Math.random() * 3 + 2 + 's';
             document.body.appendChild(star);
             setTimeout(() => { star.remove(); }, 5000);
         }
         setInterval(createStar, 100);
-
-        function toggleMusic() {
-            const audio = document.getElementById('bgm');
-            if (audio.paused) { audio.play(); } else { audio.pause(); }
-        }
     </script>
 </body>
 </html>
